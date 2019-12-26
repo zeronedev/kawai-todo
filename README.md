@@ -1,2 +1,3 @@
-# kawai-todo
-kawai-todo app made with React Native
+# Kawai-todo
+
+kawai-todo app made with React Native !!!
