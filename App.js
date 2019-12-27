@@ -6,22 +6,47 @@ import {
   StatusBar,
   TextInput,
   Dimensions,
-  Platform // 현재 사용하는 플렛폼이 무엇인기 알기위해 사용
+  Platform, // 현재 사용하는 플렛폼이 무엇인기 알기위해 사용
+  ScrollView
 } from "react-native";
+import ToDo from "./ToDo";
 
 // 장치 화면 윈도우의 가로, 세로 길이를 가져온다
 const { height, width } = Dimensions.get("window");
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <Text style={styles.title}>Kawai To Do</Text>
-      <View style={styles.card}>
-        <TextInput style={styles.input} placeholder={"New To Do"} />
+export default class App extends React.Component {
+  state = {
+    newToDo: ""
+  };
+  render() {
+    const { newToDo } = this.state;
+    return (
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        <Text style={styles.title}>Kawai To Do</Text>
+        <View style={styles.card}>
+          <TextInput
+            style={styles.input}
+            placeholder={"New To Do"}
+            value={newToDo}
+            onChangeText={this._controlNewToDo} // 함수호출
+            placeholderTextColor={"#999"}
+            returnKeyType={"done"}
+            autoCorrect={false}
+          />
+          <ScrollView>
+            <ToDo />
+          </ScrollView>
+        </View>
       </View>
-    </View>
-  );
+    );
+  }
+  // 투두 입력후 처리되는 함수
+  _controlNewToDo = text => {
+    this.setState({
+      newToDo: text
+    });
+  };
 }
 
 const styles = StyleSheet.create({
@@ -58,5 +83,10 @@ const styles = StyleSheet.create({
       }
     })
   },
-  input: {}
+  input: {
+    padding: 20,
+    borderBottomColor: "#bbb",
+    borderBottomWidth: 1,
+    fontSize: 25
+  }
 });
