@@ -34,7 +34,7 @@ export default class App extends React.Component {
             returnKeyType={"done"}
             autoCorrect={false}
           />
-          <ScrollView>
+          <ScrollView contentContainerStyle={styles.toDos}>
             <ToDo />
           </ScrollView>
         </View>
@@ -88,5 +88,9 @@ const styles = StyleSheet.create({
     borderBottomColor: "#bbb",
     borderBottomWidth: 1,
     fontSize: 25
+  },
+  // 스크롤뷰 안에서 가운데 위치
+  toDos: {
+    alignItems: "center"
   }
 });
