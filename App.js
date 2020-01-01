@@ -9,6 +9,7 @@ import {
   Platform, // 현재 사용하는 플렛폼이 무엇인기 알기위해 사용
   ScrollView
 } from "react-native";
+import { AppLoading } from "expo";
 import ToDo from "./ToDo";
 
 // 장치 화면 윈도우의 가로, 세로 길이를 가져온다
@@ -16,10 +17,21 @@ const { height, width } = Dimensions.get("window");
 
 export default class App extends React.Component {
   state = {
-    newToDo: ""
+    newToDo: "",
+    loadedToDos: false // 디스크에서 데이타를 로드했냐
   };
+
+  componentDidMount = () => {
+    // 앱이 마운트 되면 실행
+    this._loadToDos();
+  };
+
   render() {
-    const { newToDo } = this.state;
+    const { newToDo, loadedToDos } = this.state;
+    if (!loadedToDos) {
+      // 데이터를 로드 하지 안았으면 AppLoading 실행
+      return <AppLoading />;
+    }
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -45,6 +57,12 @@ export default class App extends React.Component {
   _controlNewToDo = text => {
     this.setState({
       newToDo: text
+    });
+  };
+  _loadToDos = () => {
+    // 디스크 데이터 로드 했다
+    this.setState({
+      loadedToDos: true
     });
   };
 }
