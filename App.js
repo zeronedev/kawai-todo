@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { AppLoading } from "expo";
 import ToDo from "./ToDo";
+import uuidv1 from "uuid/v1";
 
 // 장치 화면 윈도우의 가로, 세로 길이를 가져온다
 const { height, width } = Dimensions.get("window");
@@ -21,8 +22,8 @@ export default class App extends React.Component {
     loadedToDos: false // 디스크에서 데이타를 로드했냐
   };
 
+  // 앱이 마운트 되면 실행
   componentDidMount = () => {
-    // 앱이 마운트 되면 실행
     this._loadToDos();
   };
 
@@ -45,6 +46,7 @@ export default class App extends React.Component {
             placeholderTextColor={"#999"}
             returnKeyType={"done"}
             autoCorrect={false}
+            onSubmitEditing={this._addToDo} // 키패드에서 완료를 클릭할때
           />
           <ScrollView contentContainerStyle={styles.toDos}>
             <ToDo text={"Hello I'm a To Do"} />
@@ -59,11 +61,36 @@ export default class App extends React.Component {
       newToDo: text
     });
   };
+  // 디스크 데이터 로드 했다
   _loadToDos = () => {
-    // 디스크 데이터 로드 했다
     this.setState({
       loadedToDos: true
     });
+  };
+  _addToDo = () => {
+    const { newToDo } = this.state;
+    if (newToDo !== "") {
+      this.setState(prevState => {
+        const ID = uuidv1();
+        const newToDoObject = {
+          [ID]: {
+            id: ID,
+            isCompleted: false,
+            text: newToDo,
+            createdAt: Date.now()
+          }
+        };
+        const newState = {
+          ...prevState,
+          newToDo: "",
+          toDo: {
+            ...prevState.toDo,
+            ...newToDoObject
+          }
+        };
+        return { ...newState };
+      });
+    }
   };
 }
 
