@@ -7,13 +7,19 @@ import {
   Dimensions,
   TextInput
 } from "react-native";
+import PropTypes from "prop-types";
 
 const { width, height } = Dimensions.get("window");
 
 export default class ToDo extends Component {
+  static propTypes = {
+    text: PropTypes.string.isRequired,
+    isCompleted: PropTypes.bool.isRequired,
+
+  }
+
   state = {
     isEditing: false,
-    isCompleted: false,
     toDoValue: ""
   };
   render() {
@@ -44,15 +50,15 @@ export default class ToDo extends Component {
               onBlur={this._finishEditing} // 수정을 마치고 키패드가 아닌 다른곳을 클릭하면 실행 (편집종료)
             />
           ) : (
-            <Text
-              style={[
-                styles.text,
-                isCompleted ? styles.completedText : styles.uncompletedText
-              ]}
-            >
-              {text}
-            </Text>
-          )}
+              <Text
+                style={[
+                  styles.text,
+                  isCompleted ? styles.completedText : styles.uncompletedText
+                ]}
+              >
+                {text}
+              </Text>
+            )}
         </View>
         {isEditing ? (
           <View style={styles.actions}>
@@ -63,19 +69,19 @@ export default class ToDo extends Component {
             </TouchableOpacity>
           </View>
         ) : (
-          <View style={styles.actions}>
-            <TouchableOpacity onPressOut={this._startEditing}>
-              <View style={styles.actionContainer}>
-                <Text style={styles.actionText}>✏</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View style={styles.actionContainer}>
-                <Text style={styles.actionText}>❌</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        )}
+            <View style={styles.actions}>
+              <TouchableOpacity onPressOut={this._startEditing}>
+                <View style={styles.actionContainer}>
+                  <Text style={styles.actionText}>✏</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <View style={styles.actionContainer}>
+                  <Text style={styles.actionText}>❌</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
       </View>
     );
   }
@@ -141,7 +147,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     width: width / 2,
-    justifyContent: "space-between"
   },
   actions: {
     flexDirection: "row"

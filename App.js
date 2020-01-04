@@ -19,7 +19,8 @@ const { height, width } = Dimensions.get("window");
 export default class App extends React.Component {
   state = {
     newToDo: "",
-    loadedToDos: false // 디스크에서 데이타를 로드했냐
+    loadedToDos: false,
+    toDos: {}
   };
 
   // 앱이 마운트 되면 실행
@@ -28,7 +29,8 @@ export default class App extends React.Component {
   };
 
   render() {
-    const { newToDo, loadedToDos } = this.state;
+    const { newToDo, loadedToDos, toDos } = this.state;
+    console.log(toDos)
     if (!loadedToDos) {
       // 데이터를 로드 하지 안았으면 AppLoading 실행
       return <AppLoading />;
@@ -49,7 +51,7 @@ export default class App extends React.Component {
             onSubmitEditing={this._addToDo} // 키패드에서 완료를 클릭할때
           />
           <ScrollView contentContainerStyle={styles.toDos}>
-            <ToDo text={"Hello I'm a To Do"} />
+            {Object.values(toDos).map(toDo => <ToDo key={toDo.id} {...toDo} />)}
           </ScrollView>
         </View>
       </View>
@@ -83,8 +85,8 @@ export default class App extends React.Component {
         const newState = {
           ...prevState,
           newToDo: "",
-          toDo: {
-            ...prevState.toDo,
+          toDos: {
+            ...prevState.toDos,
             ...newToDoObject
           }
         };
