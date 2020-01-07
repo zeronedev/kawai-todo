@@ -30,7 +30,6 @@ export default class App extends React.Component {
 
   render() {
     const { newToDo, loadedToDos, toDos } = this.state;
-    console.log(toDos)
     if (!loadedToDos) {
       // 데이터를 로드 하지 안았으면 AppLoading 실행
       return <AppLoading />;
@@ -51,7 +50,15 @@ export default class App extends React.Component {
             onSubmitEditing={this._addToDo} // 키패드에서 완료를 클릭할때
           />
           <ScrollView contentContainerStyle={styles.toDos}>
-            {Object.values(toDos).map(toDo => <ToDo key={toDo.id} {...toDo} deleteToDo={this._deleteToDo} />)}
+            {Object.values(toDos).map(toDo => (
+              <ToDo
+                key={toDo.id}
+                deleteToDo={this._deleteToDo}
+                uncompleteToDo={this._uncompleteToDo}
+                completeToDo={this._completeToDo}
+                {...toDo}
+              />
+            ))}
           </ScrollView>
         </View>
       </View>
@@ -94,7 +101,7 @@ export default class App extends React.Component {
       });
     }
   };
-  _deleteToDo = (id) => {
+  _deleteToDo = id => {
     this.setState(prevState => {
       const toDos = prevState.toDos;
       delete toDos[id];
@@ -102,9 +109,40 @@ export default class App extends React.Component {
         ...prevState,
         ...toDos
       };
-      return { ...newState }
+      return { ...newState };
     });
-  }
+  };
+  _uncompleteToDo = id => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: {
+            ...prevState.toDos[id],
+            isCompleted: false
+          }
+        }
+      };
+      return { ...newState };
+    });
+  };
+
+  _completeToDo = id => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: {
+            ...prevState.toDos[id],
+            isCompleted: true
+          }
+        }
+      };
+      return { ...newState };
+    });
+  };
 }
 
 const styles = StyleSheet.create({

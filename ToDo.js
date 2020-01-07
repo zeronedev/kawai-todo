@@ -24,14 +24,14 @@ export default class ToDo extends Component {
     text: PropTypes.string.isRequired,
     isCompleted: PropTypes.bool.isRequired,
     deleteToDo: PropTypes.func.isRequired,
-    id: PropTypes.string.isRequired
-
-  }
-
+    id: PropTypes.string.isRequired,
+    uncompleteToDo: PropTypes.func.isRequired,
+    completeToDo: PropTypes.func.isRequired
+  };
 
   render() {
-    const { isCompleted, isEditing, toDoValue } = this.state;
-    const { text, id, deleteToDo } = this.props;
+    const { isEditing, toDoValue } = this.state;
+    const { text, id, deleteToDo, isCompleted } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.column}>
@@ -57,15 +57,15 @@ export default class ToDo extends Component {
               onBlur={this._finishEditing} // 수정을 마치고 키패드가 아닌 다른곳을 클릭하면 실행 (편집종료)
             />
           ) : (
-              <Text
-                style={[
-                  styles.text,
-                  isCompleted ? styles.completedText : styles.uncompletedText
-                ]}
-              >
-                {text}
-              </Text>
-            )}
+            <Text
+              style={[
+                styles.text,
+                isCompleted ? styles.completedText : styles.uncompletedText
+              ]}
+            >
+              {text}
+            </Text>
+          )}
         </View>
         {isEditing ? (
           <View style={styles.actions}>
@@ -76,27 +76,30 @@ export default class ToDo extends Component {
             </TouchableOpacity>
           </View>
         ) : (
-            <View style={styles.actions}>
-              <TouchableOpacity onPressOut={this._startEditing}>
-                <View style={styles.actionContainer}>
-                  <Text style={styles.actionText}>✏</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPressOut={() => deleteToDo(id)}>
-                <View style={styles.actionContainer}>
-                  <Text style={styles.actionText}>❌</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          )}
+          <View style={styles.actions}>
+            <TouchableOpacity onPressOut={this._startEditing}>
+              <View style={styles.actionContainer}>
+                <Text style={styles.actionText}>✏</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPressOut={() => deleteToDo(id)}>
+              <View style={styles.actionContainer}>
+                <Text style={styles.actionText}>❌</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     );
   }
   // 완료상태 토글 버튼 - 완료 상태값 변경 - previous state (이전의상태)
   _toggleComplete = () => {
-    this.setState(prevState => {
-      return { isCompleted: !prevState.isCompleted };
-    });
+    const { isCompleted, uncompleteToDo, completeToDo, id } = this.props;
+    if (isCompleted) {
+      uncompleteToDo(id);
+    } else {
+      completeToDo(id);
+    }
   };
   _startEditing = () => {
     this.setState({
@@ -151,7 +154,7 @@ const styles = StyleSheet.create({
   column: {
     flexDirection: "row",
     alignItems: "center",
-    width: width / 2,
+    width: width / 2
   },
   actions: {
     flexDirection: "row"
