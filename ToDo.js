@@ -56,6 +56,7 @@ export default class ToDo extends Component {
               onChangeText={this._controllInput} // 문자 수정할 때마다 호출
               returnKeyType={"done"}
               onBlur={this._finishEditing} // 수정을 마치고 키패드가 아닌 다른곳을 클릭하면 실행 (편집종료)
+              underlineColorAndroid={"transparent"}
             />
           ) : (
             <Text

@@ -49,6 +49,7 @@ export default class App extends React.Component {
             returnKeyType={"done"}
             autoCorrect={false}
             onSubmitEditing={this._addToDo} // 키패드에서 완료를 클릭할때
+            underlineColorAndroid={"transparent"}
           />
           <ScrollView contentContainerStyle={styles.toDos}>
             {Object.values(toDos)
@@ -82,7 +83,8 @@ export default class App extends React.Component {
       //console.log(toDos);
       //console.log(parsedToDos);
       //디스크의 데이터를 읽어와서 this.state의 toDos{}에 배정한다 오브젝트다
-      this.setState({ loadedToDos: true, toDos: parsedToDos });
+      // toDos 내용이 없을때 null 일대 예러 .. 그래서 || {} 추가 - 빈오브젝트
+      this.setState({ loadedToDos: true, toDos: parsedToDos || {} });
     } catch (err) {
       console.log(err);
     }
