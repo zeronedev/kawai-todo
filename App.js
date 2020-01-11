@@ -51,16 +51,18 @@ export default class App extends React.Component {
             onSubmitEditing={this._addToDo} // 키패드에서 완료를 클릭할때
           />
           <ScrollView contentContainerStyle={styles.toDos}>
-            {Object.values(toDos).map(toDo => (
-              <ToDo
-                key={toDo.id}
-                deleteToDo={this._deleteToDo}
-                uncompleteToDo={this._uncompleteToDo}
-                completeToDo={this._completeToDo}
-                updateToDo={this._updateToDo}
-                {...toDo}
-              />
-            ))}
+            {Object.values(toDos)
+              .reverse() // 마직막에 쓰여지는것이 위에 나타난다
+              .map(toDo => (
+                <ToDo
+                  key={toDo.id}
+                  deleteToDo={this._deleteToDo}
+                  uncompleteToDo={this._uncompleteToDo}
+                  completeToDo={this._completeToDo}
+                  updateToDo={this._updateToDo}
+                  {...toDo}
+                />
+              ))}
           </ScrollView>
         </View>
       </View>
@@ -73,10 +75,17 @@ export default class App extends React.Component {
     });
   };
   // 디스크 데이터 로드 했다
-  _loadToDos = () => {
-    this.setState({
-      loadedToDos: true
-    });
+  _loadToDos = async () => {
+    try {
+      const toDos = await AsyncStorage.getItem("toDos"); // string이다
+      const parsedToDos = JSON.parse(toDos); // string를 object로 변환
+      //console.log(toDos);
+      //console.log(parsedToDos);
+      //디스크의 데이터를 읽어와서 this.state의 toDos{}에 배정한다 오브젝트다
+      this.setState({ loadedToDos: true, toDos: parsedToDos });
+    } catch (err) {
+      console.log(err);
+    }
   };
   _addToDo = () => {
     const { newToDo } = this.state;
