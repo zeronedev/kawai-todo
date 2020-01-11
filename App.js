@@ -31,7 +31,7 @@ export default class App extends React.Component {
 
   render() {
     const { newToDo, loadedToDos, toDos } = this.state;
-    if (!loadedToDos) {
+    if (loadedToDos) {
       // 데이터를 로드 하지 안았으면 AppLoading 실행
       return <AppLoading />;
     }
